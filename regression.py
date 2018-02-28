@@ -31,3 +31,24 @@ def ridge_regression(X,y, C=0, add_bias = True):
             raise
     inverseXt = np.dot(inverse, Xt)
     return np.dot(inverseXt, y)
+
+# Lp regularised regression. With p = 1 this is known as Lasso.
+# Note this relies on scipy's optimize.minimize function.
+# This optimisation could be achieved with gradient descent.
+def lp_regression(X,y, C = 1.0, p = 1.0, add_bias = True, max_iter = 1000):
+    if(C<0):
+        raise ValueError("Regularisation must be non-negative.")
+    if(add_bias):
+        X_ = np.ones((X.shape[0], X.shape[1]+1))
+        X_[:,:-1] = X
+    else:
+        X_ = X
+    Xt = np.transpose(X_)
+    XtX = np.dot(Xt,X)
+    Xty = np.dot(Xt,y)
+    W = np.random.normal(size = (X_.shape[1], 1))
+    lpnorm = np.power(np.sum(np.power(np.absolute(W),p)),1/p)
+    def loss(W):
+        return np.linalg.norm(y - np.dot(X_,W)) + C * lpnorm
+    from scipy.optimize import minimize
+    return minimize(loss, W, options = {'maxiter':max_iter}).x
