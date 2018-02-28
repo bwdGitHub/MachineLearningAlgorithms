@@ -35,6 +35,9 @@ def ridge_regression(X,y, C=0, add_bias = True):
 # Lp regularised regression. With p = 1 this is known as Lasso.
 # Note this relies on scipy's optimize.minimize function.
 # This optimisation could be achieved with gradient descent.
+# Note this only works with 1-dimensional targets.
+# It is simple to extend to n-dimensional targets by applying this on each dimension.
+# i.e. To predict y = (y1,y2) as a linear function of X, predict y1 and y2 individually.
 def lp_regression(X,y, C = 1.0, p = 1.0, add_bias = True, max_iter = 1000):
     if(C<0):
         raise ValueError("Regularisation must be non-negative.")
@@ -46,6 +49,7 @@ def lp_regression(X,y, C = 1.0, p = 1.0, add_bias = True, max_iter = 1000):
     Xt = np.transpose(X_)
     XtX = np.dot(Xt,X)
     Xty = np.dot(Xt,y)
+
     W = np.random.normal(size = (X_.shape[1], 1))
     lpnorm = np.power(np.sum(np.power(np.absolute(W),p)),1/p)
     def loss(W):
