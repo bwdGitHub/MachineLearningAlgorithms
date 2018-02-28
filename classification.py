@@ -9,6 +9,9 @@ import numpy as np
 # X is the training features, each row is a data point, each column is a feature.
 # y are the classes of these features.
 # Returns the classes of the k-nearest neighbours.
+# Note that any parameters of the metric, such as p in the Lp metric need to be specified,
+# e.g. by using def metric(x,y): return lp_metric(x,y,p=p0).
+# Also note that there are more efficient algorithms for finding the k smallest values in a list/array.
 from mathematics import euclidean_metric
 def knns(x, k, X, y, metric = euclidean_metric):
     def dist_x(z):
