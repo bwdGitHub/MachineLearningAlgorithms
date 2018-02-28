@@ -56,3 +56,15 @@ def lp_regression(X,y, C = 1.0, p = 1.0, add_bias = True, max_iter = 1000):
         return np.linalg.norm(y - np.dot(X_,W)) + C * lpnorm
     from scipy.optimize import minimize
     return minimize(loss, W, options = {'maxiter':max_iter}).x
+
+# K-nearest neighbours regression.
+# Take the average of the k nearest neighbours as a prediction.
+# This can also be implemented with weighting, e.g. based on a kernel.
+# This would require knns to return the distances between neighbours.
+# Note this is defined to only regress one point at a time.
+# To regress multiple points you can simply iterate this function.
+from mathematics import euclidean_metric
+def knn_regression(x,k, X, y, metric = euclidean_metric):
+    from classification import knns
+    knn = knns(x,k, X, y, metric = metric)
+    return np.mean(knn)
