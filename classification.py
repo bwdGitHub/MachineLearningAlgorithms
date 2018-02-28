@@ -19,3 +19,15 @@ def knns(x, k, X, y, metric = euclidean_metric):
     dist = np.apply_along_axis(dist_x, 1, X)
     dist, data, classes = zip(*sorted(zip(dist, X,y)))
     return classes[0:k]
+
+# Classify a point x according to the majority vote of it's k nearest neighbours.
+# Ties are broke at random.
+def knn_classifier(x,k, X, y, metric = euclidean_metric):
+    knn = knns(x,k,X,y,metric)
+    unique, counts = np.unique(knn, return_counts=True)
+    best = np.argwhere(counts == np.max(counts))
+    if len(best)>1:
+        i = np.random.choice(best)
+    else:
+        i = best[0]
+    return unique[i]
