@@ -65,20 +65,15 @@ def class_conditional_std(X,y):
     return stds
 
 # We can use the above to find the probabilities that a point is in a particular class, assuming these are Gaussian.
-def gaussian2(x,m,s):
-    exponent = (np.sum(np.power(x-m,2))/(2*(s**2)))
-    denominator = s*np.sqrt(2*np.pi)
-    return np.exp(-exponent)/denominator
 def plug_in_probability(x, X,y):
     prior = priors(y)
     means = class_conditional_mean(X,y)
     stds = class_conditional_std(X,y)
     prob = {}
     total_prob = 0
-    from mathematics import gaussian
+    from mathematics import multivariate_gaussian
     for clf in prior:
-        prob[clf] = prior[clf]*gaussian2(x,means[clf],stds[clf])
-        #gaussian(x, means[clf], stds[clf])*prior[clf]
+        prob[clf] = prior[clf]*multivariate_gaussian(x,means[clf],stds[clf])
         total_prob+=prob[clf]
     # normalise the probabilites
     for clf in prob:
