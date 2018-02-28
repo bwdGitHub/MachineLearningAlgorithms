@@ -16,6 +16,8 @@ from mathematics import euclidean_metric
 def knns(x, k, X, y, metric = euclidean_metric):
     def dist_x(z):
         return metric(x,z)
+    if(len(X.shape)==1):
+        X = np.reshape(X, (X.shape[0],1))
     dist = np.apply_along_axis(dist_x, 1, X)
     dist, data, classes = zip(*sorted(zip(dist, X,y)))
     return classes[0:k]
