@@ -11,3 +11,9 @@ def euclidean_metric(x,y):
 def gaussian_kernel(x,y,sigma, p=2.0):
     dist = lp_metric(x,y, p=p)
     return np.exp(-(dist**2)/(2*sigma**2))
+
+# A one dimensional Gaussian helper function.
+def gaussian(x,m,s):
+    exponent = ((x-m)**2)/(2*(s**2))
+    denominator = s*np.sqrt(2*np.pi)
+    return np.exp(-exponent)/denominator
