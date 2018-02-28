@@ -50,3 +50,11 @@ def class_conditional_mean(X,y):
     for yi, count in zip(unique, counts):
         means[yi] = np.mean(X[y==yi], axis = 0)
     return means
+
+# Get standard deviation for each class.
+def class_conditional_std(X,y):
+    unique, counts = np.unique(y, return_counts = True)
+    stds = {}
+    for yi, count in zip(unique, counts):
+        stds[yi] = np.std(X[y==yi], axis = 0)
+    return stds
