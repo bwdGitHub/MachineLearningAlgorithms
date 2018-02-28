@@ -18,12 +18,11 @@ def gaussian(x,m,s):
     denominator = s*np.sqrt(2*np.pi)
     return np.exp(-exponent)/denominator
 
-def multivariate_gaussian(x, m, s, dimension):
+def multivariate_gaussian(x, m, s):
     inv = np.linalg.inv(s)
     exponent = np.dot(inv, (x-m))
     exponent = np.dot(np.transpose(x-m), exponent)
     exponent/=-2
-    print(exponent)
+    dimension = s.shape[0]
     denominator = np.sqrt(np.power(2*np.pi, dimension)*np.linalg.det(s))
-    print(denominator)
     return np.exp(exponent)/denominator
