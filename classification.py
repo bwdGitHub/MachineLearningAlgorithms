@@ -83,8 +83,23 @@ def plug_in_probability(x, X,y):
 # Linear binary classifier.
 # X is input features. W is a weight matrix.
 # Returns 1 or -1 as the classes.
+# This needs to be trained to find W.
 def linear_classifier(X,W, bias=0):
     model = np.dot(X,W) + bias
     pred = np.ones(model.shape)
     pred[model<0] = -1
-    return pred
+    return np.transpose(pred)
+
+# Gradient of the loss function that counts misclassifications according to how badly they are wrong.
+# i.e. the gradient for gradient descent in perceptron.
+def misclassification_gradient(X,y, W,  bias=0):
+    clf = linear_classifier(X,W, bias)
+    n = len(clf)
+    W_grad = np.zeros(len(W))
+    bias_grad = 0
+    rows = y!=clf[0]
+    misclf_X = X[rows,:]
+    misclf_y = y[rows]
+    bias_grad = -np.sum(misclf_y)
+    W_grad = -np.sum(misclf_X *np.reshape(misclf_y, (len(misclf_y), 1)), axis=0)
+    return W_grad, bias_grad
