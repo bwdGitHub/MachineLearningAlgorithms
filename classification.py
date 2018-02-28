@@ -42,3 +42,11 @@ def priors(y):
     for yi, count in zip(unique, counts):
         prior[yi] = count/n
     return prior
+
+# Get mean value of features for each class.
+def class_conditional_mean(X,y):
+    unique, counts = np.unique(y, return_counts = True)
+    means = {}
+    for yi, count in zip(unique, counts):
+        means[yi] = np.mean(X[y==yi], axis = 0)
+    return means
