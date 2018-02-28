@@ -33,3 +33,12 @@ def knn_classifier(x,k, X, y, metric = euclidean_metric):
     else:
         i = best[0]
     return unique[i]
+
+# Get empirical prior probabities.
+def priors(y):
+    unique, counts = np.unique(y, return_counts = True)
+    prior = {}
+    n = len(y)
+    for yi, count in zip(unique, counts):
+        prior[yi] = count/n
+    return prior
