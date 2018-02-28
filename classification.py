@@ -79,3 +79,12 @@ def plug_in_probability(x, X,y):
     for clf in prob:
         prob[clf] /= total_prob
     return prob
+
+# Linear binary classifier.
+# X is input features. W is a weight matrix.
+# Returns 1 or -1 as the classes.
+def linear_classifier(X,W, bias=0):
+    model = np.dot(X,W) + bias
+    pred = np.ones(model.shape)
+    pred[model<0] = -1
+    return pred
