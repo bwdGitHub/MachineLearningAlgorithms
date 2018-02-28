@@ -1,4 +1,5 @@
 # Mathematics helper functions.
+# Note many of these are possibly defined in numpy already.
 
 # Simple Lp metric.
 def lp_metric(x,y, p=2.0):
