@@ -92,6 +92,7 @@ def linear_classifier(X,W, bias=0):
 
 # Gradient of the loss function that counts misclassifications according to how badly they are wrong.
 # i.e. the gradient for gradient descent in perceptron.
+# Note there seems to be some awkwardness here with getting misclf_y to be the right shape.
 def misclassification_gradient(X,y, W,  bias=0):
     clf = linear_classifier(X,W, bias)
     n = len(clf)
@@ -102,4 +103,29 @@ def misclassification_gradient(X,y, W,  bias=0):
     misclf_y = y[rows]
     bias_grad = -np.sum(misclf_y)
     W_grad = -np.sum(misclf_X *np.reshape(misclf_y, (len(misclf_y), 1)), axis=0)
-    return W_grad, bias_grad
+    return np.reshape(W_grad, (len(W_grad),1)), bias_grad
+
+# Gradient descent for the misclassification gradient to train a linear classifier.
+def misclassification_gradient_descent(X,y, initial_W = None, initial_bias = 0, learning_rate = 1.0, max_iter = 100, verbose = False, steps_per_message = 10):
+    bias = initial_bias
+    if(initial_W is None):
+        if(len(X.shape)==1):
+            rows = 1
+        else:
+            rows = X.shape[1]
+        W = np.random.normal(size = (rows,1))
+    else:
+        W = initial_W
+    step = 0
+    clf = linear_classifier(X,W,bias)
+    num_errors = np.sum(y!=(clf[0]))
+    while(step < max_iter and num_errors>0):
+        step+=1
+        W_grad, bias_grad = misclassification_gradient(X,y,W, bias)
+        W = W - learning_rate * W_grad
+        bias = bias-learning_rate*bias_grad
+        clf = linear_classifier(X,W,bias)
+        num_errors = np.sum(y!=(clf[0]))
+        if(verbose and step % steps_per_message==0):
+            print("There are {} errors at step {}".format(num_errors, step))
+    return W, bias
