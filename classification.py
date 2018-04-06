@@ -129,3 +129,70 @@ def misclassification_gradient_descent(X,y, initial_W = None, initial_bias = 0, 
         if(verbose and step % steps_per_message==0):
             print("There are {} errors at step {}".format(num_errors, step))
     return W, bias
+
+# Some simple naive bayes methods for text classification
+
+# strip punctuation and lowercase to uniformise text
+def process_text(text):
+    import string
+    punc = set(string.punctuation)
+    return (''.join(ch for ch in text if ch not in punc)).lower()
+
+# simple extension of the above to an array of strings
+def process_texts(texts):
+    processed = []
+    for text in texts:
+        processed.append(process_text(text))
+    return processed
+
+# naive bayes conditional probabilities for binary classification
+# labels should be 1s and 0s, or booleans
+def word_conditionals(texts, labels):
+    processed = process_texts(texts)
+    vocab = set()
+    true_vocab = {}
+    false_vocab = {}
+    true_size = 0
+    false_size = 0
+    for text, clf in zip(processed, labels):
+        words = text.split()
+        for word in words:
+            vocab.add(word)
+            if clf:
+                true_size+=1
+                if word not in true_vocab:
+                    true_vocab[word]=1
+                else:
+                    true_vocab[word]+=1
+            else:
+                false_size+=1
+                if word not in false_vocab:
+                    false_vocab[word] = 1
+                else:
+                    false_vocab[word] +=1
+    true_conditionals = {}
+    false_conditionals = {}
+    for word in vocab:
+        if word not in true_vocab:
+            true_conditionals[word] = 0
+        if word in true_vocab:
+            true_conditionals[word] = true_vocab[word]/true_size
+        if word not in false_vocab:
+            false_conditionals[word] = 0
+        if word in false_vocab:
+            false_conditionals[word] = false_vocab[word]/false_size
+    return true_conditionals, false_conditionals
+
+def naive_bayes_text_classification(text, texts, labels):
+    true_conditionals, false_conditionals = word_conditionals(texts, labels)
+    processed = process_text(text)
+    true_prior = np.sum(labels)/len(labels)
+    numerator = 1
+    denominator = 1
+    words = processed.split()
+    for word in words:
+        numerator*=true_conditionals[word]
+        denominator*=false_conditionals[word]
+    numerator *= true_prior
+    denominator = denominator*(1-true_prior) + numerator
+    return numerator/denominator
